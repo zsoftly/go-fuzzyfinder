@@ -149,9 +149,18 @@ func (f *finder) computeLayout() (Layout, error) {
 	}
 
 	// Position content area
-	// Horizontally: center if width is constrained
+	// Horizontally: align based on horizontalAlignment option (default: center)
 	// Vertically: bottom if height is constrained (like fzf), otherwise use full terminal
-	contentX := (termWidth - contentWidth) / 2
+	var contentX int
+	switch f.opt.horizontalAlignment {
+	case 1: // AlignLeft
+		contentX = 0
+	case 2: // AlignRight
+		contentX = termWidth - contentWidth
+	default: // AlignCenter (0) or unset
+		contentX = (termWidth - contentWidth) / 2
+	}
+
 	contentY := 0
 	if f.opt.height > 0 && f.opt.height < termHeight {
 		// Position at bottom when height is explicitly set

@@ -7,22 +7,23 @@ import (
 )
 
 type opt struct {
-	mode          mode
-	previewFunc   func(i, width, height int) string
-	multi         bool
-	hotReload     bool
-	hotReloadLock sync.Locker
-	promptString  string
-	header        string
-	beginAtTop    bool
-	context       context.Context
-	query         string
-	selectOne     bool
-	preselected   func(i int) bool
-	height        int
-	border        bool
-	width         int
-	borderChars   []rune
+	mode                mode
+	previewFunc         func(i, width, height int) string
+	multi               bool
+	hotReload           bool
+	hotReloadLock       sync.Locker
+	promptString        string
+	header              string
+	beginAtTop          bool
+	context             context.Context
+	query               string
+	selectOne           bool
+	preselected         func(i int) bool
+	height              int
+	border              bool
+	width               int
+	borderChars         []rune
+	horizontalAlignment horizontalAlignment
 }
 
 type mode int
@@ -110,6 +111,25 @@ func WithCursorPosition(position cursorPosition) Option {
 		case CursorPositionBottom:
 			o.beginAtTop = false
 		}
+	}
+}
+
+type horizontalAlignment int
+
+const (
+	// AlignLeft positions the finder at the left edge of the terminal
+	AlignLeft horizontalAlignment = iota
+	// AlignCenter positions the finder in the center of the terminal (default)
+	AlignCenter
+	// AlignRight positions the finder at the right edge of the terminal
+	AlignRight
+)
+
+// WithHorizontalAlignment sets the horizontal alignment of the finder
+// Default is AlignCenter. Use AlignLeft for left-aligned positioning.
+func WithHorizontalAlignment(alignment horizontalAlignment) Option {
+	return func(o *opt) {
+		o.horizontalAlignment = alignment
 	}
 }
 
